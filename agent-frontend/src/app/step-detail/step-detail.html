@@ -1,0 +1,73 @@
+@if (step(); as s) {
+  <a [routerLink]="['/projects', s.projectId]" class="back-link">
+    <i class="ti ti-arrow-left"></i> {{ s.projectTopic }}
+  </a>
+
+  <div class="detail-header">
+    <span class="order">{{ s.orderIndex + 1 }}</span>
+    <h1>{{ s.type }}</h1>
+    <span class="badge status-{{ s.status }}">{{ s.status }}</span>
+  </div>
+
+  @if (s.log) {
+    <div class="info-row">
+      <span class="info-label">Log</span>
+      <span class="info-value">{{ s.log }}</span>
+    </div>
+  }
+
+  @if (s.type === 'SCRIPT_GENERATE') {
+    <div class="section-title">Senaryo</div>
+    <p class="hint">Kendi senaryonu buraya yapıştır ve kaydet. İstersen sonra otomatik üretimi de deneyebilirsin.</p>
+
+    <textarea
+      class="script-editor"
+      [(ngModel)]="scriptText"
+      placeholder="Senaryoyu buraya yapıştır..."
+      rows="18"
+    ></textarea>
+
+    <div class="editor-actions">
+      <button class="btn-primary" (click)="saveScript()" [disabled]="saving() || generating()">
+        @if (saving()) {
+          <i class="ti ti-loader"></i> Kaydediliyor...
+        } @else {
+          <i class="ti ti-device-floppy"></i> Senaryoyu kaydet
+        }
+      </button>
+
+      <button class="btn-secondary" (click)="generateWithAI()" [disabled]="saving() || generating()">
+        @if (generating()) {
+          <i class="ti ti-loader"></i> Üretiliyor...
+        } @else {
+          <i class="ti ti-sparkles"></i> Gemini ile üret
+        }
+      </button>
+
+      @if (saved()) {
+        <span class="saved-msg"><i class="ti ti-check"></i> Kaydedildi</span>
+      }
+    </div>
+  } @else {
+    <div class="section-title">Bu adım ne yapar?</div>
+    <p class="hint">{{ stepHint() }}</p>
+
+    <div class="editor-actions">
+      <button class="btn-primary" (click)="runThisStep()" [disabled]="running()">
+        @if (running()) {
+          <i class="ti ti-loader"></i> Çalışıyor...
+        } @else {
+          <i class="ti ti-player-play"></i> Adımı çalıştır
+        }
+      </button>
+    </div>
+  }
+}
+
+@if (loading()) {
+  <p class="status">Yükleniyor...</p>
+}
+
+@if (error()) {
+  <p class="status error">{{ error() }}</p>
+}

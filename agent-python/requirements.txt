@@ -1,0 +1,10 @@
+fastapi
+uvicorn[standard]
+pydantic
+python-dotenv
+google-genai
+requests
+
+# TTS icin ayrica gerekli (buyuk paketler, GPU'ya gore torch surumu degisir):
+#   pip install coqui-tts
+#   pip install torch --index-url https://download.pytorch.org/whl/cu121   (CUDA icin)

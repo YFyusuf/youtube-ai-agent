@@ -1,0 +1,32 @@
+<div class="layout">
+  <aside class="sidebar">
+    <div class="brand">
+      <div class="logo"><i class="ti ti-eye"></i></div>
+      <div class="brand-text">
+        <div class="brand-name">Curiosity</div>
+        <div class="brand-sub">of Things</div>
+      </div>
+    </div>
+
+    <nav class="menu">
+      <a routerLink="/" routerLinkActive="active" [routerLinkActiveOptions]="{ exact: true }" class="menu-item">
+        <i class="ti ti-layout-dashboard"></i> Panel
+      </a>
+      <a routerLink="/videos" routerLinkActive="active" class="menu-item">
+        <i class="ti ti-movie"></i> Videolar
+      </a>
+      <a routerLink="/new" routerLinkActive="active" class="menu-item">
+        <i class="ti ti-plus"></i> Yeni video
+      </a>
+      <a routerLink="/settings" routerLinkActive="active" class="menu-item">
+        <i class="ti ti-settings"></i> Ayarlar
+      </a>
+    </nav>
+
+    <div class="sidebar-footer">v0.1 · agent aktif</div>
+  </aside>
+
+  <main class="content">
+    <router-outlet></router-outlet>
+  </main>
+</div>

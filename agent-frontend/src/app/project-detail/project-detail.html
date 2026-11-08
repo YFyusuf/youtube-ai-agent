@@ -1,0 +1,132 @@
+<a routerLink="/videos" class="back-link">
+  <i class="ti ti-arrow-left"></i> Videolara dön
+</a>
+
+@if (loading()) {
+  <p class="status">Yükleniyor...</p>
+}
+
+@if (error()) {
+  <p class="status error">{{ error() }}</p>
+}
+
+@if (project(); as p) {
+  <div class="detail-header">
+    <h1>{{ p.topic }}</h1>
+    @if (p.overallStatus === 'DONE') {
+      <span class="badge done">Paylaşıldı</span>
+    } @else {
+      <span class="badge stock">Stok</span>
+    }
+  </div>
+
+  <div class="section-title">Çıktı klasörü</div>
+  <div class="folder-row">
+    <input
+      type="text"
+      class="topic-input"
+      placeholder="örn. dyatlov"
+      [(ngModel)]="folderValue"
+      (keyup.enter)="saveFolder()"
+      [disabled]="savingFolder()"
+    />
+    <button class="run-btn" (click)="saveFolder()" [disabled]="savingFolder()">
+      @if (savingFolder()) {
+        <i class="ti ti-loader"></i>
+      } @else {
+        <i class="ti ti-device-floppy"></i>
+      }
+    </button>
+  </div>
+  <p class="hint">Ses ve görseller bu klasöre yazılır: stok kök klasörü + bu ad (ör. ...\stok\dyatlov\ses)</p>
+
+  <div class="section-title">Pipeline adımları</div>
+
+  <div class="step-list">
+    @for (step of p.steps; track step.id) {
+      <div class="step-card">
+        <a class="step-main" [routerLink]="['/steps', step.id]">
+          <span class="order">{{ step.orderIndex + 1 }}</span>
+          <span class="type">{{ step.type }}</span>
+        </a>
+        <span class="badge status-{{ step.status }}">{{ step.status }}</span>
+        @if (step.status === 'PENDING' || step.status === 'FAILED') {
+          <button
+            class="run-btn"
+            (click)="runStep(step.id)"
+            [disabled]="runningStepId() !== null">
+            @if (runningStepId() === step.id) {
+              <i class="ti ti-loader"></i>
+            } @else {
+              <i class="ti ti-player-play"></i>
+            }
+          </button>
+        }
+      </div>
+    }
+  </div>
+
+  @if (parts().length > 0) {
+    <div class="section-title">Part'lar ({{ parts().length }})</div>
+    <p class="hint">Metni veya görsel prompt'unu düzenleyip kaydet, sonra sadece o part'ın sesini/görselini yeniden üret.</p>
+
+    @if (partMessage()) {
+      <p class="part-message">{{ partMessage() }}</p>
+    }
+
+    <div class="part-list">
+      @for (part of parts(); track part.id) {
+        <div class="part-card">
+          <div class="part-header">
+            <span class="order">{{ part.orderIndex }}</span>
+            <span class="part-files">
+              <i class="ti ti-volume" [class.ready]="part.audioFile" title="{{ part.audioFile ?? 'Ses üretilmedi' }}"></i>
+              <i class="ti ti-photo" [class.ready]="part.imageFile" title="{{ part.imageFile ?? 'Görsel üretilmedi' }}"></i>
+            </span>
+          </div>
+
+          <label class="part-label">Metin</label>
+          <textarea
+            class="part-editor"
+            rows="4"
+            [(ngModel)]="part.text"
+            [disabled]="busyPartId() === part.id"
+          ></textarea>
+
+          <label class="part-label">Görsel prompt'u</label>
+          <textarea
+            class="part-editor prompt"
+            rows="2"
+            placeholder="IMAGE_PROMPT adımı doldurur; istersen elle yaz"
+            [(ngModel)]="part.imagePrompt"
+            [disabled]="busyPartId() === part.id"
+          ></textarea>
+
+          <div class="part-actions">
+            <button class="run-btn" (click)="savePart(part)" [disabled]="busyPartId() !== null" title="Kaydet">
+              @if (busyPartId() === part.id && busyAction() === 'save') {
+                <i class="ti ti-loader"></i>
+              } @else {
+                <i class="ti ti-device-floppy"></i>
+              }
+            </button>
+            <button class="run-btn" (click)="regenAudio(part)" [disabled]="busyPartId() !== null" title="Sesi (yeniden) üret">
+              @if (busyPartId() === part.id && busyAction() === 'tts') {
+                <i class="ti ti-loader"></i>
+              } @else {
+                <i class="ti ti-volume"></i>
+              }
+            </button>
+            <button class="run-btn" (click)="regenImage(part)" [disabled]="busyPartId() !== null" title="Görseli (yeniden) üret">
+              @if (busyPartId() === part.id && busyAction() === 'image') {
+                <i class="ti ti-loader"></i>
+              } @else {
+                <i class="ti ti-photo"></i>
+              }
+            </button>
+          </div>
+        </div>
+      }
+    </div>
+  }
+}

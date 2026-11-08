@@ -1,0 +1,40 @@
+<div class="page-header">
+  <div>
+    <h1>Yeni video</h1>
+    <p class="subtitle">Bir konu gir, üretim hattı 12 adımıyla hazırlansın</p>
+  </div>
+</div>
+
+<div class="form-card">
+  <label class="field-label">Video konusu</label>
+  <input
+    type="text"
+    class="topic-input"
+    placeholder="örn. Dyatlov Geçidi Olayı"
+    [(ngModel)]="topicValue"
+    (keyup.enter)="create()"
+    [disabled]="submitting()"
+  />
+
+  <label class="field-label">Çıktı klasörü adı (boş bırakılırsa konudan türetilir)</label>
+  <input
+    type="text"
+    class="topic-input"
+    placeholder="örn. dyatlov"
+    [(ngModel)]="folderValue"
+    (keyup.enter)="create()"
+    [disabled]="submitting()"
+  />
+
+  @if (error()) {
+    <p class="form-error">{{ error() }}</p>
+  }
+
+  <button class="btn-primary" (click)="create()" [disabled]="submitting()">
+    @if (submitting()) {
+      <i class="ti ti-loader"></i> Oluşturuluyor...
+    } @else {
+      <i class="ti ti-plus"></i> Video oluştur
+    }
+  </button>
+</div>

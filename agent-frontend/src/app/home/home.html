@@ -1,0 +1,43 @@
+<div class="page-header">
+  <div>
+    <h1>Videolar</h1>
+    <p class="subtitle">Tüm projelerin</p>
+  </div>
+  <a routerLink="/new" class="btn-primary">
+    <i class="ti ti-plus"></i> Yeni video
+  </a>
+</div>
+
+@if (loading()) {
+  <p class="status">Yükleniyor...</p>
+}
+
+@if (error()) {
+  <p class="status error">{{ error() }}</p>
+}
+
+@if (!loading() && !error()) {
+  @if (projects().length === 0) {
+    <p class="status">Henüz proje yok.</p>
+  } @else {
+    <div class="video-list">
+      @for (project of projects(); track project.id) {
+        <a class="video-card" [routerLink]="['/projects', project.id]">
+          <div class="video-left">
+            <i class="ti ti-movie"
+               [class.done]="project.overallStatus === 'DONE'"></i>
+            <div>
+              <div class="topic">{{ project.topic }}</div>
+              <div class="meta">{{ project.stepCount }} adım</div>
+            </div>
+          </div>
+          @if (project.overallStatus === 'DONE') {
+            <span class="badge done">Paylaşıldı</span>
+          } @else {
+            <span class="badge stock">Stok</span>
+          }
+        </a>
+      }
+    </div>
+  }
+}

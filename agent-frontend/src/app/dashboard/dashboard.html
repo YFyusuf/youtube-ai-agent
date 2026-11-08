@@ -1,0 +1,57 @@
+<div class="page-header">
+  <div>
+    <h1>Tekrar hoş geldin</h1>
+    <p class="subtitle">Kanalının üretim hattına genel bakış</p>
+  </div>
+  <a routerLink="/new" class="btn-primary">
+    <i class="ti ti-plus"></i> Yeni video
+  </a>
+</div>
+
+@if (loading()) {
+  <p class="status">Yükleniyor...</p>
+}
+
+@if (error()) {
+  <p class="status error">{{ error() }}</p>
+}
+
+@if (!loading() && !error()) {
+  <div class="stat-grid">
+    <div class="stat-card">
+      <div class="stat-label">Toplam video</div>
+      <div class="stat-value">{{ total() }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Paylaşılan</div>
+      <div class="stat-value accent">{{ shared() }}</div>
+    </div>
+    <div class="stat-card">
+      <div class="stat-label">Stok</div>
+      <div class="stat-value accent">{{ stock() }}</div>
+    </div>
+  </div>
+
+  <div class="section-title">Son videolar</div>
+
+  @if (recent().length === 0) {
+    <p class="status">Henüz video yok. İlkini oluştur!</p>
+  } @else {
+    <div class="recent-list">
+      @for (project of recent(); track project.id) {
+        <a class="recent-item" [routerLink]="['/projects', project.id]">
+          <div class="recent-left">
+            <i class="ti ti-movie"
+               [class.done]="project.overallStatus === 'DONE'"></i>
+            <span>{{ project.topic }}</span>
+          </div>
+          @if (project.overallStatus === 'DONE') {
+            <span class="badge done">Paylaşıldı</span>
+          } @else {
+            <span class="badge stock">Stok</span>
+          }
+        </a>
+      }
+    </div>
+  }
+}

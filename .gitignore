@@ -1,0 +1,52 @@
+
+# Secrets
+.env
+.env.*
+!.env.example
+*.key
+*.pem
+secrets.properties
+**/secrets.properties
+
+# Python
+.venv/
+venv/
+__pycache__/
+*.pyc
+.pytest_cache/
+.mypy_cache/
+
+# Angular / Node.js
+node_modules/
+.angular/
+dist/
+coverage/
+.npm/
+
+# Spring Boot / Maven
+target/
+*.class
+.mvn/wrapper/maven-wrapper.jar
+
+# IDE
+.vscode/
+.idea/
+*.iml
+
+# Operating System
+.DS_Store
+Thumbs.db
+
+# Generated media
+*.wav
+*.mp3
+*.mp4
+*.mov
+
+# Logs
+*.log
+logs/
+
+# Temporary files
+tmp/
+temp/
